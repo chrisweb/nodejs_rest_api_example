@@ -1,0 +1,10 @@
+{
+    "name": "APPLICATION_NAME",
+    "description": "APPLICATION DESCRIPTION",
+    "version": "0.0.1",
+    "dependencies": {
+        "mongoose": "3.6.15",
+        "express": "3.3.4"
+    },
+    "engine": "node >= 0.10.13"
+}

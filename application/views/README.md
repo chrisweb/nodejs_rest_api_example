@@ -1,0 +1,1 @@
+Nodejs application views (layouts) folder
