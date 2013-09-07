@@ -6,10 +6,10 @@
 var Article = {};
 var Mongoose = require('Mongoose');
 
-var ArticlesSchema = Mongoose.Schema;
+var Schema = Mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-var Article = new Schema({
+var ArticlesSchema = new Schema({
     user: { type: ObjectId, required: true },
 	title: String,
 	body: String,
