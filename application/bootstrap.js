@@ -1,24 +1,42 @@
-// get the environment variable
+/**
+ * 
+ * get the environment variable
+ * 
+ */
 var environment = process.env.NODE_ENV;
 
 console.log('environment: ' + environment);
 
+/**
+ * 
+ * loading vendor modules
+ * 
+ */
 var Mongoose = require('mongoose');
 
 var Express = require('express');
 
+/**
+ * 
+ * setup a server using expressjs
+ * 
+ */
 var app = Express();
 
-app.get('/', function(request, response) {
-    
-    console.log('root route got called');
-    
-    response.writeHead(200, { 'Content-Type': 'text/plain' });
-  
-	response.write('hello world');
-    
-    response.end();
-  
+// compress (gzip) static files
+app.use(Express.compress());
+
+// deliver static files from the "desktop_client_dev" folder
+app.use(Express.static(__dirname + '/../desktop_client_dev'));
+
+var fs = require('fs');
+
+app.get('/', function(request, response, next) {
+
+    response.setHeader('Content-Type', 'text/html');
+
+    response.send(fs.readFileSync('./application/views/layouts/default.html', 'utf8'));
+
 });
 
 app.all('/api/v1/articles/:id?*', function(request, response) {
@@ -57,6 +75,11 @@ app.all('/api/v1/articles/:id?*', function(request, response) {
 
 app.listen(3000);
 
+/**
+ * 
+ * connect to mongodb using mongoose
+ * 
+ */
 var mongoOptions = {};
 
 Mongoose.connect('mongodb://localhost:27017/MY_DATABASE_NAME', mongoOptions, function(error) {
@@ -71,4 +94,17 @@ Mongoose.connect('mongodb://localhost:27017/MY_DATABASE_NAME', mongoOptions, fun
         
     }
     
+});
+
+/**
+ * 
+ * share the utilities file with the client
+ * 
+ */
+app.get('/javascripts/library/utilities.js', function(request, response, next) {
+
+    response.setHeader('Content-Type', 'application/javascript');
+
+    response.send(fs.readFileSync('./application/library/utilities.js', 'utf8'));
+
 });

@@ -24,28 +24,32 @@ app.get('/', function(request, response) {
 app.all('/api/v1/articles/:id?*', function(request, response) {
 
 	console.log('articles API route got called, using the "' + request.route.method.toUpperCase() + '" method, with the optional parameter set to: ' + request.params['id']);
+    
+    var articleModel = require('./models/Article');
 
-    response.writeHead(200, { 'Content-Type': 'application/json' });
+    articleModel.find(function(error, articlesCollection) {
 
-	var articlesCollection = [];
-	
-	articlesCollection.push({
-		id: 1,
-		title: 'foo'
-	});
-	
-	articlesCollection.push({
-		id: 2,
-		title: 'bar'
-	});
+        if (error) {
 
-	response.write(
-        JSON.stringify(
-            {
-                articles: articlesCollection
-            }
-        )
-    );
+            response.writeHead(500, { 'Content-Type': 'text/plain' });
+            
+            response.write('Error: ' + error);
+
+        } else {
+
+            response.writeHead(200, { 'Content-Type': 'application/json' });
+            
+            response.write(
+                JSON.stringify(
+                    {
+                        articles: articlesCollection
+                    }
+                )
+            );
+
+        }
+
+    });
     
     response.end();
   
